@@ -32,15 +32,16 @@ class AppbarButton extends StatelessWidget {
 
 class NavbackButton extends StatelessWidget {
 
-  static double leading_width = height(48.0);
+  static double leading_width = width(53.0);
   static double titlespacing = width(0.0);
+  final Function onTap;
   
-  NavbackButton({Key key}) : super(key: key);
+  NavbackButton({Key key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){  Get.back();  },
+      onTap: this.onTap == null ? () {  Get.back();  } : this.onTap,
       child: Container(
         alignment: Alignment.centerLeft,
         margin: EdgeInsets.only(left: width(10.0),),

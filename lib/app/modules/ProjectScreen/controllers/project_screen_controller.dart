@@ -4,8 +4,6 @@ class ProjectScreenController extends GetxController {
   //TODO: Implement ProjectScreenController
   int client = 2;
   int admin = 1;
-  String description, startDate, budget, title;
-  int projectId, clientId;
 
   final count = 0.obs;
 
@@ -66,5 +64,4 @@ class ProjectScreenController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

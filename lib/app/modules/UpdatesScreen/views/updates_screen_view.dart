@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trko_official/app/models/project_update.dart';
 import 'package:trko_official/app/modules/AddUpdateScreen/views/add_update_screen_view.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
+import 'package:trko_official/app/modules/ProjectScreen/controllers/project_screen_controller.dart';
 import 'package:trko_official/app/utils/responsive.dart';
 import 'package:trko_official/app/utils/helper.dart';
 import 'package:trko_official/app/widgets/appbar.dart';
@@ -18,21 +20,18 @@ class UpdatesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext updates_screen_context) {
 
-    UpdatesScreenController controller = Get.put(UpdatesScreenController());
-
-    controller.projectId = Get.arguments["projectId"];
-    controller.projectName = Get.arguments["projectName"];
-    controller.clientId = Get.arguments["clientId"];
+    UpdatesScreenController controller = Get.put(UpdatesScreenController(),);
 
     LoginScreenController loginScreenController = Get.find();
+    HomeScreenController homeScreenController = Get.find();
 
-    print("Clienttttdddsd: ${controller.clientId}");
+    print("Clienttttdddsd: ${homeScreenController.clientId}");
 
     return MediaQuery(
       data: myTextScaleFactor(updates_screen_context),
       child: Scaffold(
         appBar: AppBar(
-          leading: NavbackButton(),
+          leading: NavbackButton(onTap: (){   Get.back(closeOverlays: true);   },),
           leadingWidth: NavbackButton.leading_width,
           title: ScreenName(screen_name: "Updates",),
           titleSpacing: NavbackButton.titlespacing,
@@ -59,35 +58,57 @@ class UpdatesScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Center(
-            child: Obx(()=>
-              Container(
-                padding: EdgeInsets.only(left: width(10.0), top: height(20.0), right: width(10.0)),
-                child: Column(
+            child: Container(
+              padding: EdgeInsets.only(left: width(10.0), top: height(20.0), right: width(10.0), bottom: height(60.0)),
+              child: Obx(()=>
+                Column(
                   children: [
 
                     Container(
                       alignment: Alignment.centerLeft,
                       margin: EdgeInsets.only(left: width(7.0),),
                       child: Text(
-                        controller.projectName,
+                        homeScreenController.projectName,
                         style: GoogleFonts.poppins(fontSize: height(18.0), fontWeight: FontWeight.w700, color: Colors.black),
                       ),
                     ),
 
                     SizedBox(height: height(40.0), ),
 
-                    // Futurebuilder in conjuction with list view builder are to be utilized for the results.
-                    // search results
-                    controller.updatesList.isEmpty? Loading()
-                    : controller.updatesList[0].description != null && controller.updatesList[0].updateId == null
-                    ? refreshProjectScreen(message: controller.updatesList[0].description, label: "refresh", statusCode: null)
-                    : controller.updatesList[0].updateId == null
-                    ? Container(
-                      margin: EdgeInsets.only(top: height(270.0)),
-                        alignment: Alignment.center,
-                        child: Text("You do not have any update.", style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_blue,)),
+                    // updates from the api   
+
+                    controller.updatesList.isEmpty ? // check if update's list is empty
+
+                    Loading(isFullScreen: false,) : // else
+
+                    // if api call returns error
+                    controller.updatesList[0].updateId == null && controller.updatesList[0].message != null ?
+
+                    refreshProjectScreen(
+                      message: controller.updatesList[0].message,
+                      label: "refresh",
+                      onTap: (){ 
+                        controller.onReady();  
+                      },
+                      statusCode: controller.updatesList[0].statusCode,
+                      isFullScreen: false,
                     )
-                    :ListView.builder(
+
+                    : // else
+
+                    // if project has no updates
+                    controller.updatesList[0].updateId == null && controller.updatesList[0].description == null ?
+
+                    Container(
+                      margin: EdgeInsets.only(top: height(270.0)),
+                      alignment: Alignment.center,
+                      child: Text("You do not have any update.", style: GoogleFonts.poppins(fontSize: height(17.0), color: Colors.black,)),
+                    )
+                    
+                    : // else 
+
+                    // project update List were gotten display them
+                    ListView.builder(
                       physics: ClampingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: controller.updatesList.length,
@@ -100,7 +121,7 @@ class UpdatesScreen extends StatelessWidget {
                               CardTemplate4(
                                 key: ValueKey(update.updateId),
                                 isApproved: update.isApproved,
-                                createdAt: controller.convertDateTime(update.createdAt),
+                                dateTime: update.isApproved == false ? convertDateTime(update.createdAt) : convertDateTime(update.updatedAt),
                                 description: update.description,
                                 milestone: update.milestone,
                                 link1: update.link1,
@@ -116,10 +137,10 @@ class UpdatesScreen extends StatelessWidget {
                           ),
                         );
                       }
-                    )
+                    ),     
                   ],
                 ),
-              ),
+              ),              
             ),
           ),
         ),

@@ -57,7 +57,59 @@ class Launch{
 
   }
 
+}
+
+// convert date and time string to the appropriate format
+convertDateTime(String dateTime){
+
+  String pattern1 = "T";    String pattern2 = ".";
+  List temp = [];
+  String converted = "";
+  String tempString;
+
+  // split into a date to temp[0] and time with Z to temp[1]
+  dateTime.split(pattern1).forEach((element) {
+    temp.add(element);
+  });
+
+  // date already gotten
+  converted = temp[0] + " " ;
+
+  // uncleaned time string with "." and "Z"
+  tempString  = temp[1];
+
+  // re-initialize temp 
+  temp = [];
+
+  tempString.split(pattern2).forEach((element){
+    temp.add(element);
+  });
+
+  // cleaned time
+  tempString = temp[0];
+
+  // match using the first two digit of the time string
+  var match = int.parse(tempString.toString().substring(0,2));
+
+  // append "Am" or "Pm" depending on the first two digit of the cleaned time
+  if( match >= 12 ){
+
+    return converted = converted + tempString + " pm";
+
+  }
+  else{
+
+    return converted = converted + " " + tempString + " am";
+
+  }
+}
 
 
+// helps reove the bracket at the beginning and end of the data gotten from the milestone list
+cleanMilestone(var milestoneValue){
+
+  milestoneValue = milestoneValue.toString().substring(1, (milestoneValue.toString().length -1));
+
+  return milestoneValue;
 
 }

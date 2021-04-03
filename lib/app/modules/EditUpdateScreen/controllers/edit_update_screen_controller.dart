@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
 import 'package:trko_official/app/services/api/dio_api.dart';
@@ -8,23 +9,17 @@ import 'package:trko_official/app/widgets/snackbar.dart';
 
 class EditUpdateScreenController extends GetxController {
   //TODO: Implement EditUpdateScreenController
-
-  final ratio1 = 5;
-  final ratio2 = 1;
-  final field1 = ValueKey('1');
-  final field2 = ValueKey('2');
-  final field3 = ValueKey('3');
-  final field4 = ValueKey('4');
-  var currentItem = 0.obs;
+  
+  final field1 = ValueKey('editfield1');
+  final field2 = ValueKey('editfield2');
+  final field3 = ValueKey('editfield3');
+  final field4 = ValueKey('editfield4');
+  var currentItem = RxInt();
   var result;
   final formkey = GlobalKey<FormState>().obs;
   TrkoRepository trkoRepository = TrkoRepository();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController link1Controller = TextEditingController();
-  TextEditingController link2Controller = TextEditingController();
-  TextEditingController link3Controller = TextEditingController();
-  var milestone;
-  String updateId;
+
+  UpdatesScreenController updatesScreenController = Get.find();
 
   getMilestoneId(var value){
 
@@ -42,9 +37,9 @@ class EditUpdateScreenController extends GetxController {
 
   selectedItem(value){
 
-    milestone = Get.find<UpdatesScreenController>().milestoneList[value].keys;
+    updatesScreenController.milestone = Get.find<UpdatesScreenController>().milestoneList[value].keys;
 
-    milestone = milestone.toString().substring(1, (milestone.toString().length - 1));
+    updatesScreenController.milestone = updatesScreenController.milestone.toString().substring(1, (updatesScreenController.milestone.toString().length - 1));
 
     currentItem.value = value;
 
@@ -58,20 +53,20 @@ class EditUpdateScreenController extends GetxController {
       loading(context: Get.context);
 
       List<Map<String, dynamic>> updateData = [
-        {"key": "milestone", "value": milestone.toString()},
-        {"key": "description","value": descriptionController.text},
-        {"key": "link1", "value": link1Controller.text},
-        {"key": "link2", "value": link2Controller.text},
-        {"key": "link3", "value": link3Controller.text},
-        {"key": "project", "value": Get.find<UpdatesScreenController>()
+        {"key": "milestone", "value": updatesScreenController.milestone.toString()},
+        {"key": "description","value": updatesScreenController.descriptionController.text},
+        {"key": "link1", "value": updatesScreenController.link1Controller.text},
+        {"key": "link2", "value": updatesScreenController.link2Controller.text},
+        {"key": "link3", "value": updatesScreenController.link3Controller.text},
+        {"key": "project", "value": Get.find<HomeScreenController>()
             .projectId},
         {"key": "client", "value": Get
-            .find<UpdatesScreenController>()
+            .find<HomeScreenController>()
             .clientId}
             ];
 
       result = await trkoRepository.editUpdate(updateData: updateData, token: Get.find<LoginScreenController>().token,
-          updateId: updateId);
+          updateId: updatesScreenController.updateId);
 
       print("$result");
 
@@ -79,7 +74,7 @@ class EditUpdateScreenController extends GetxController {
 
         print("saving....");
 
-        await Get.find<UpdatesScreenController>().onReady();
+        await Get.find<UpdatesScreenController>().getUpdates();// check out
 
         Get.back();
 

@@ -3,8 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:trko_official/app/models/project_update.dart';
 import 'package:trko_official/app/models/user_model.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/services/api/dio_api.dart';
+import 'package:trko_official/app/widgets/loading_widget.dart';
+import 'package:trko_official/app/widgets/snackbar.dart';
 
 class UpdatesScreenController extends GetxController {
   //TODO: Implement UpdatesScreenController
@@ -15,19 +18,17 @@ class UpdatesScreenController extends GetxController {
   int client = 2;
   TrkoRepository trkoRepository = TrkoRepository();
   bool notApproved = false;
-  int projectId;
-  int clientId;
-  RxString milestone;
+  int projectId, clientId;
   String projectName;
+  String approvedAt;
   var updatesList = List<Update>().obs;
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController link1Controller = TextEditingController();
+  TextEditingController link2Controller = TextEditingController();
+  TextEditingController link3Controller = TextEditingController();
+  String updateId;
+  var milestone;
 
-  cleanMilestone(var milestoneValue){
-
-    milestoneValue = milestoneValue.toString().substring(1, (milestoneValue.toString().length -1));
-
-    return milestoneValue;
-
-  }
 
 
   List<Map<String, String>> milestoneList = [
@@ -47,14 +48,15 @@ class UpdatesScreenController extends GetxController {
 
 
 
-    print("called project $projectId");
 
-    List<Update> result= await trkoRepository.projectUpdate(token: Get.find<LoginScreenController>().token, projectId: projectId);
+    List<Update> result= await trkoRepository.projectUpdate(
+      token: Get.find<LoginScreenController>().token, 
+      projectId: Get.find<HomeScreenController>().projectId,
+    );
 
     print("$result");
 
-    if(result.isNotEmpty){
-      print("I got ClientId: $clientId");
+    if(result.isNotEmpty && result[0].updateId != null){
 
       for (Update update in result){
         if(update.isApproved == false){
@@ -81,15 +83,14 @@ class UpdatesScreenController extends GetxController {
 
       return updatesList;
     }
-    if(result == null){
-      result.add(Update(description: "Oops! check your internet connection", updateId: null));
-      updatesList.assignAll(result);
-      return result;
-    }
     if(result.isEmpty){
-      result.add(Update(updateId: null));
+      updatesList.add(Update(updateId: null, description: null,));
+      return updatesList;
+    }
+    else{
+      
       updatesList.assignAll(result);
-      return result;
+      return updatesList;
     }
 
   }
@@ -98,6 +99,8 @@ class UpdatesScreenController extends GetxController {
   // delete update
   Future<CallResponse> deleteUpdate(String updateId)async{
 
+    //loader
+    loading(context: Get.context);
 
     print("called updateId $updateId");
 
@@ -105,13 +108,34 @@ class UpdatesScreenController extends GetxController {
 
     print("$result");
 
-    return result;
+    if(result.statusCode != null){
+
+      // refresh screen
+      await Get.find<UpdatesScreenController>().getUpdates();
+      
+      // remove loader
+      Get.back();
+
+      // success response
+      snackbarResponse("Update has been ${result.message.toLowerCase()}");
+
+    }
+    else{
+      
+      // remove loader
+      Get.back();
+
+      snackbarResponse("${result.message}");
+
+    }
 
   }
 
   // approve update
   Future<CallResponse> approveUpdate(String updateId)async{
 
+    // loader
+    loading(context: Get.context);
 
     print("called approving updateId $updateId");
 
@@ -119,7 +143,26 @@ class UpdatesScreenController extends GetxController {
 
     print("$result");
 
-    return result;
+    if(result.statusCode != null){
+
+      // refresh screen
+      await Get.find<UpdatesScreenController>().getUpdates();
+      
+      // remove loader
+      Get.back();
+
+      // success response
+      snackbarResponse("Update has been ${result.message.toLowerCase()}fully approved");
+
+    }
+    else{
+      
+      // remove loader
+      Get.back();
+
+      snackbarResponse("${result.message}");
+
+    }
   }
   
   hideButton(){
@@ -137,8 +180,9 @@ class UpdatesScreenController extends GetxController {
   }
 
 
-
+  // determines who sees un-approved updates
   showUpdate(int groupId, bool isApproved){
+
     if(groupId == client && isApproved == notApproved){
 
       return false;
@@ -149,31 +193,6 @@ class UpdatesScreenController extends GetxController {
   }
 
 
-
-  convertDateTime(String dateTime){
-
-    String pattern = "T";    String pattern2 = "Z";
-    List temp = [];
-    String converted = "";
-
-    dateTime.split(pattern).forEach((element) {
-      temp.add(element);
-    });
-
-
-    converted = temp[0] + " " ;
-    String tempString  = temp[1];
-
-    tempString.split(pattern2).forEach((element){
-      if(element != ""){
-        converted = converted + element;
-      };
-    });
-
-    print("Converted date and time newly $converted");
-
-    return converted;
-  }
 
 
   @override

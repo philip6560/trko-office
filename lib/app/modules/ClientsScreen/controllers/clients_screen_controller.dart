@@ -9,16 +9,19 @@ class ClientsScreenController extends GetxController {
   //TODO: Implement ClientsScreenController
 
   final ratio1 = 2;
-  final field1 = ValueKey('field1');
+  final field1 = ValueKey('searchField1');
   int admin = 1;
   int client = 2;
   TrkoRepository trkoRepository = TrkoRepository();
-  List<Client> allClients = [];
+  var allClients = List<Client>().obs;
   var result;
+  int clientId;
 
   Future<List<Client>> getClients()async{
 
-    allClients = await trkoRepository.allClients(token: Get.find<LoginScreenController>().token);
+    result = await trkoRepository.allClients(token: Get.find<LoginScreenController>().token);
+
+    allClients.assignAll(result);
 
     return allClients;
   }
@@ -30,6 +33,7 @@ class ClientsScreenController extends GetxController {
 
   @override
   void onReady() {
+    getClients();
     super.onReady();
   }
 

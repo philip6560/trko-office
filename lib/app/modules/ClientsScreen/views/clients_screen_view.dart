@@ -11,9 +11,6 @@ import 'package:trko_official/app/widgets/text_fields.dart';
 import '../../../models/clients_list_model.dart';
 import '../../../widgets/cards.dart';
 import '../../../widgets/loading_widget.dart';
-import '../../../widgets/loading_widget.dart';
-import '../../../widgets/loading_widget.dart';
-import '../../../widgets/loading_widget.dart';
 import '../../HomeScreen/views/home_screen_view.dart';
 import '../controllers/clients_screen_controller.dart';
 
@@ -41,62 +38,66 @@ class ClientsScreen extends StatelessWidget {
         child: Center(
           child: Container(
             padding: EdgeInsets.only(top: height(16.0), left: width(10.0), right: width(10.0)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            child: Obx(()=>
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-                // searchbox field label
-                FieldLabel(
-                  labelname: 'Search',
-                ),
+                  // searchbox field label
+                  FieldLabel(
+                    labelname: 'Search',
+                  ),
 
-                SizedBox(height: height(9.0),),
+                  SizedBox(height: height(9.0),),
 
-                // searchbox field
-                MyFormField(
-                  fieldKey: controller.field1,
-                ),
+                  // searchbox field
+                  MyFormField(
+                    key: controller.field1,
+                  ),
 
-                SizedBox(height: height(22.0),),
+                  SizedBox(height: height(22.0),),  
+                  
+                      
+                  // check if allClient's list is empty
+                  controller.allClients.isEmpty ?
 
-                // Futurebuilder in conjuction with list view builder are to be utilized for the results.
-                // search results
-                FutureBuilder<List<Client>>(
-                  future: controller.getClients(),
-                  builder: (BuildContext context, AsyncSnapshot<List<Client>> snapshot) {
+                  Loading(isFullScreen: false,) : // else
+                  
+                  // if api call returns error
+                  controller.allClients[0].id == null && controller.allClients[0].message != null ?
 
-                    // Loading icon
-                    if (snapshot.hasError) {
-                      return refreshProjectScreen(message: "Oops! check your internet connection", label: "refresh", statusCode: null);
-                    }
+                  refreshProjectScreen(
+                    message: controller.allClients[0].message,
+                    label: "refresh",
+                    onTap: (){ 
+                      controller.onReady();  
+                    },
+                    statusCode: controller.allClients[0].statusCode,
+                    isFullScreen: false,
+                  )
 
-                    // Load clients when data is fetched successfully
-                    if (snapshot.hasData && snapshot.data[0].id != null){
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          Client client = snapshot.data[index];
-                          return CardTemplate1(
-                            key: ValueKey(client.id),
-                            title: client.companyName,
-                            bottomMargin: 19.0,
-                            onTap: () {
-                              Get.to(HomeScreen(),
-                                  arguments: {"client_id": client.id});
-                            },
-                          );
+                  : // else list containing all client was gotten
+
+                  // allClient's List were gotten display them
+                  ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.allClients.length,
+                    itemBuilder: (context, index) {
+                      Client client = controller.allClients[index];
+                      return CardTemplate1(
+                        key: ValueKey(client.id),
+                        title: client.companyName,
+                        bottomMargin: 19.0,
+                        onTap: () {
+                          controller.clientId= client.id;
+                           Get.to(HomeScreen(),);
                         },
                       );
-                    }
-
-                    // refresh screen to re-fetch clients
-                    else{
-                      return Loading();
-                    }
-                  }
-                ),
-              ],
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:trko_official/app/modules/HomeScreen/views/home_screen_view.dart';
 import 'package:trko_official/app/utils/responsive.dart';
 import 'package:trko_official/app/utils/helper.dart';
 import 'package:trko_official/app/widgets/buttons.dart';
@@ -66,7 +65,7 @@ class LoginScreen extends StatelessWidget {
 
                     // email field
                     MyFormField(
-                      fieldKey: controller.field1,
+                      key: controller.field1,
                       textEditingController: controller.emailcontroller,
                       textInputAction: TextInputAction.next,
                       validator: (String val)=> val.isNotEmpty && GetUtils.isEmail(val)? null: "Invalid email address",
@@ -84,7 +83,7 @@ class LoginScreen extends StatelessWidget {
 
                     // password field
                     MyFormField(
-                      fieldKey: controller.field2,
+                      key: controller.field2,
                       textEditingController: controller.passwordcontroller,
                       textInputAction: TextInputAction.done,
                       validator: (String val)=> val.isNotEmpty ? null: "Enter password",

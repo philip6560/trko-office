@@ -15,8 +15,8 @@ class MyFormField extends StatelessWidget {
   final bool obscureText;
 
 
-  MyFormField({this.fieldKey, this.textEditingController,
-    this.textInputAction, this.validator, this.onSaved, this.obscureText}) : assert(fieldKey != null);
+  MyFormField({Key key, this.fieldKey, this.textEditingController,
+    this.textInputAction, this.validator, this.onSaved, this.obscureText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,6 @@ class MyFormField extends StatelessWidget {
       // height: height(56.0),
       child: TextFormField(
         autofocus: false,
-        key: this.fieldKey,
         obscureText: this.obscureText == null? false : this.obscureText,
         cursorColor: MyColor.dark_blue,
         textInputAction: this.textInputAction,
@@ -79,7 +78,6 @@ class DescriptionField extends StatelessWidget {
       width: width(373.0),
       height: height(287.0),
       child: TextFormField(
-        key: this.fieldKey,
         autofocus: false,
         maxLines: 30,
         cursorColor: MyColor.dark_blue,

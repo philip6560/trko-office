@@ -52,7 +52,7 @@ class AddPaymentScreen extends  StatelessWidget {
 
                   // amount field
                   MyFormField(
-                    fieldKey: controller.field1,
+                    key: controller.field1,
                   ),
 
                   SizedBox(height: height(26.0),),
@@ -66,7 +66,7 @@ class AddPaymentScreen extends  StatelessWidget {
 
                   // date field
                   MyFormField(
-                    fieldKey: controller.field2,
+                    key: controller.field2,
                   ),
 
                   SizedBox(height: height(26.0),),
@@ -80,7 +80,7 @@ class AddPaymentScreen extends  StatelessWidget {
 
                   // note field
                   MyFormField(
-                    fieldKey: controller.field3,
+                    key: controller.field3,
                   ),
 
                   SizedBox(height: height(46.0),),

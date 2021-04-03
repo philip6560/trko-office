@@ -10,9 +10,9 @@ class ChangePasswordScreenController extends GetxController {
   //TODO: Implement AddPaymentScreenController
 
   final ratio1 = 1;
-  final field1 = ValueKey('field1');
-  final field2 = ValueKey('field2');
-  final field3 = ValueKey('field3');
+  final field1 = ValueKey('changePasswordField1');
+  final field2 = ValueKey('changePasswordField2');
+  final field3 = ValueKey('changePasswordField3');
   String token;
   int group_id;
   bool navBackButton;

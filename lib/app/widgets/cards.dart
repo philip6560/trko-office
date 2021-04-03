@@ -5,15 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
+import '../utils/helper.dart';
 import '../modules/EditUpdateScreen/views/edit_update_screen_view.dart';
 import '../modules/PaymentsScreen/controllers/payments_screen_controller.dart';
 import '../utils/responsive.dart';
-import '../utils/responsive.dart';
-import '../utils/helper.dart';
-import '../utils/helper.dart';
-import '../utils/helper.dart';
-import '../utils/helper.dart';
-import 'loading_widget.dart';
 
 
 // used in client project, client's and home screen
@@ -24,9 +19,9 @@ class CardTemplate1 extends StatelessWidget {
   final Function onTap;
   final double bottomMargin;
 
-  double radius = 10.0;
-  String projectCompleted = "1";
-  String projectNotCompleted = "0";
+  final double radius = 10.0;
+  final String projectCompleted = "1";
+  final String projectNotCompleted = "0";
 
  CardTemplate1({Key key, this.title, this.projectStatus, this.onTap, this.bottomMargin}) : super(key: key);
 
@@ -44,6 +39,7 @@ class CardTemplate1 extends StatelessWidget {
         color: Colors.white,
         child: Container(
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(height(radius)),
             boxShadow: [
               BoxShadow(
                 blurRadius: 6.0,
@@ -111,6 +107,7 @@ class CardTemplate2 extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(height(10.0)),
             boxShadow: [
               BoxShadow(
                 blurRadius: 6.0,
@@ -122,22 +119,18 @@ class CardTemplate2 extends StatelessWidget {
           height: height(151.0),
           width: width(166.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
 
-              Flexible(
-                flex: 5,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: SvgPicture.asset(this.icon),
-                ),
+              Container(
+                width: width(61.0), height: height(61.0),
+                alignment: Alignment.center,
+                child: SvgPicture.asset(this.icon),
               ),
 
-              Flexible(
-                flex: 2,
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Text(this.name, style: GoogleFonts.poppins(fontSize: height(18.0),)),
-                ),
+              Container(
+                alignment: Alignment.topCenter,
+                child: Text(this.name, style: GoogleFonts.poppins(fontSize: height(18.0),)),
               )
             ],
           ),
@@ -273,7 +266,7 @@ class CardTemplate3 extends StatelessWidget {
 // used in updates screen
 class CardTemplate4 extends StatelessWidget {
 
-  final String description, milestone, link1, link2, link3, createdAt;
+  final String description, milestone, link1, link2, link3, dateTime;
   final String updateId;
   final bool isApproved;
 
@@ -281,7 +274,7 @@ class CardTemplate4 extends StatelessWidget {
   final bool notApproved = false;
 
   const CardTemplate4({Key key, this.isApproved, this.description,
-    this.createdAt, this.milestone, this.link1, this.link2, this.link3,
+    this.dateTime, this.milestone, this.link1, this.link2, this.link3,
     this.updateId}) : super(key: key);
 
   @override
@@ -314,7 +307,7 @@ class CardTemplate4 extends StatelessWidget {
                 children: [
 
                   Text(
-                    this.createdAt,
+                    this.dateTime,
                     style: GoogleFonts.poppins(fontSize: height(14.0),color: MyColor.strong_orange),
                   ),
 
@@ -332,7 +325,8 @@ class CardTemplate4 extends StatelessWidget {
             // center section
             Container(
               alignment: Alignment.centerLeft,
-              child: Text(this.description,
+              child: Text(
+                this.description,
                 style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_gray,),
               ),
             ),
@@ -380,7 +374,7 @@ class CardTemplate4 extends StatelessWidget {
               child: Container(
                 alignment: Alignment.bottomRight,
                 child: CardTemplate4Buttons(updateId: this.updateId, milestone: this.milestone, link3: this.link3,
-                  link2: this.link2,link1: this.link1, description: this.description, createdAt: this.createdAt,),
+                  link2: this.link2, link1: this.link1, description: this.description, dateTime: this.dateTime,),
               ),
             ),
           ]
@@ -393,40 +387,50 @@ class CardTemplate4 extends StatelessWidget {
 // used in updates screen
 class CardTemplate4Buttons extends StatelessWidget {
 
-  final String description, milestone, link1, link2, link3, createdAt;
+  final String description, milestone, link1, link2, link3, dateTime;
   final String updateId;
 
   const CardTemplate4Buttons({Key key, this.updateId, this.milestone,
-  this.description, this.link1, this.link2, this.link3, this.createdAt}) : super(key: key);
+  this.description, this.link1, this.link2, this.link3, this.dateTime}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    UpdatesScreenController controller = Get.find();
+
+    print("Description: $description, milestone: $milestone, createdAt: $dateTime, updateId: $updateId, Links: $link1, $link2, $link3 ");
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
 
+        // approve button
         GestureDetector(
           onTap: ()async{
-            //loader
-            loading(context: context);
-            // delete function
-            await Get.find<UpdatesScreenController>().approveUpdate(this.updateId);
-            // refresh screen
-            await Get.find<UpdatesScreenController>().onReady();
-            // remove loader
-            Get.back();
+            
+            // approve function
+            await controller.approveUpdate(this.updateId);
+
             },
           child: Container(
               child: Icon(CupertinoIcons.checkmark_alt_circle, color: MyColor.dark_cyan, size: height(24.0),)
           ),
         ),
 
-        SizedBox(width: width(22.75),),
+        SizedBox(width: height(22.75),),
 
+        // edit button
         GestureDetector(
-          onTap: (){  Get.to(EditUpdateScreen(), arguments: {"updateId": this.updateId,
-          "description": this.description, "milestone": this.milestone,
-          "link1": this.link1, "link2": this.link2, "link3": this.link3});  },
+          onTap: (){  
+            controller.milestone = this.milestone;
+            controller.descriptionController.text  = this.description;
+            controller.link1Controller.text = this.link1;
+            controller.link2Controller.text = this.link2;
+            controller.link3Controller.text = this.link3;
+            controller.updateId = this.updateId;
+            // supply dets for editing
+            Get.to(EditUpdateScreen());
+            },
           child: Container(
               width: width(21.0),
               height: height(20.89),
@@ -434,18 +438,14 @@ class CardTemplate4Buttons extends StatelessWidget {
           ),
         ),
 
-        SizedBox(width: width(20.75),),
+        SizedBox(width: height(20.75),),
 
+        // delete button
         GestureDetector(
           onTap: ()async{
-            //loader
-            loading(context: context);
-            // delete function
-            await Get.find<UpdatesScreenController>().deleteUpdate(this.updateId);
-            // refresh screen
-            await Get.find<UpdatesScreenController>().onReady();
-            // remove loader
-            Get.back();
+
+            // delete call
+            await controller.deleteUpdate(this.updateId);
 
           },
             child: Icon(Icons.delete, size: height(24.0),),

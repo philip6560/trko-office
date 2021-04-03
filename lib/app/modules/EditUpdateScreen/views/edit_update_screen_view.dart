@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
 import 'package:trko_official/app/utils/responsive.dart';
 import 'package:trko_official/app/utils/helper.dart';
@@ -18,16 +19,9 @@ class EditUpdateScreen extends StatelessWidget {
 
     EditUpdateScreenController controller = Get.put(EditUpdateScreenController());
 
-    controller.milestone = Get.arguments["milestone"];
+    UpdatesScreenController updatesScreenController = Get.find();
 
-    controller.getMilestoneId(controller.milestone);
-
-    controller.descriptionController.text = Get.arguments["description"];
-    controller.link1Controller.text = Get.arguments["link1"];
-    controller.link2Controller.text = Get.arguments["link2"];
-    controller.link3Controller.text = Get.arguments["link3"];
-    controller.updateId = Get.arguments["updateId"];
-
+    controller.getMilestoneId(updatesScreenController.milestone);
 
     print("this is the link1controller ${controller.currentItem.value}");
 
@@ -57,7 +51,7 @@ class EditUpdateScreen extends StatelessWidget {
                       // Project title
                       Container(
                           child: Text(
-                            Get.find<UpdatesScreenController>().projectName,
+                            Get.find<HomeScreenController>().projectName,
                             style: GoogleFonts.poppins(color: Colors.black, fontSize: width(18.0), fontWeight: FontWeight.w700),
                           )
                       ),
@@ -85,10 +79,10 @@ class EditUpdateScreen extends StatelessWidget {
 
                       // Description field
                       DescriptionField(
-                        fieldKey: controller.field1,
-                        textEditingController: controller.descriptionController,
+                        key: controller.field1,
+                        textEditingController: updatesScreenController.descriptionController,
                         validator: (String val)=> val.isNotEmpty ? null: "Description field cannot be left blank",
-                        onSaved: (String val)=> controller.descriptionController.text = val,
+                        onSaved: (String val)=> updatesScreenController.descriptionController.text = val,
                       ),
 
                       SizedBox(height: height(20.5),),
@@ -102,13 +96,29 @@ class EditUpdateScreen extends StatelessWidget {
 
                       // link 1 field
                       MyFormField(
-                        fieldKey: controller.field2,
-                        textEditingController: controller.link1Controller,
+                        key: controller.field2,
+                        textEditingController: updatesScreenController.link1Controller,
                         textInputAction: TextInputAction.next,
-                        validator: (String val)=> val.isNotEmpty? GetUtils.isURL(val)?
-                        null:"please enter a valid url"
-                            : null,
-                        onSaved: (String val)=> controller.link1Controller.text = val,
+                        validator: (String val){
+                          if(val.isNotEmpty && GetUtils.isURL(val)){
+                            return null;
+                          }
+                          else if(val.isEmpty){
+                            if(updatesScreenController.link2Controller.text.isNotEmpty && updatesScreenController.link3Controller.text.isNotEmpty){
+                            return "link 1 field cannot be empty";
+                            }
+                            else if(updatesScreenController.link3Controller.text.isNotEmpty){
+                              return "link 1 field cannot be empty";
+                            }
+                            else if(updatesScreenController.link2Controller.text.isNotEmpty){
+                              return "link 1 field cannot be empty";
+                            }
+                          }
+                          else{
+                            return "please enter a valid url";
+                          }
+                        },
+                        onSaved: (String val)=> updatesScreenController.link1Controller.text = val,
                       ),
 
                       SizedBox(height: height(23.0),),
@@ -122,25 +132,26 @@ class EditUpdateScreen extends StatelessWidget {
 
                       // link 2 field
                       MyFormField(
-                        fieldKey: controller.field3,
-                        textEditingController: controller.link2Controller,
+                        key: controller.field3,
+                        textEditingController: updatesScreenController.link2Controller,
                         textInputAction: TextInputAction.next,
                         validator: (String val){
                           if(val.isNotEmpty && GetUtils.isURL(val)){
-                            if(controller.link1Controller.text.isEmpty && GetUtils.isURL(val)){
-                              return "link 1 field cannot be empty";
+                            return null;
+                          }
+                          else if(val.isEmpty){
+                            if(updatesScreenController.link1Controller.text.isNotEmpty && updatesScreenController.link3Controller.text.isNotEmpty){
+                            return "link 2 field cannot be empty";
                             }
-                            else{
-                              return null;
+                            else if(updatesScreenController.link3Controller.text.isNotEmpty){
+                              return "link 2 field cannot be empty";
                             }
                           }
-                          if(val.isEmpty){
-                            return null;
-                          }else{
+                          else{
                             return "please enter a valid url";
                           }
-                        },
-                        onSaved: (String val)=> controller.link2Controller.text = val,
+                        },                        
+                        onSaved: (String val)=> updatesScreenController.link2Controller.text = val,
                       ),
 
                       SizedBox(height: height(23.0),),
@@ -152,28 +163,23 @@ class EditUpdateScreen extends StatelessWidget {
 
                       SizedBox(height: height(9.0),),
 
-                      // note field
+                      // link 3 field label
                       MyFormField(
-                        fieldKey: controller.field4,
-                        textEditingController: controller.link3Controller,
+                        key: controller.field4,
+                        textEditingController: updatesScreenController.link3Controller,
                         textInputAction: TextInputAction.done,
                         validator: (String val){
-                          if(val.isNotEmpty && GetUtils.isURL(val)){
-                            if(controller.link1Controller.text.isEmpty && controller.link2Controller.text.isEmpty){
-                              return "link 1 and link 2 field cannot be empty";
-                            }
-                            else{
-                              return null;
-                            }
+                          if(val.isNotEmpty & GetUtils.isURL(val)){
+                            return null;
                           }
-                          if(val.isEmpty){
+                          else if(val.isEmpty){
                             return null;
                           }
                           else{
                             return "please enter a valid url";
                           }
                         },
-                        onSaved: (String val)=> controller.link3Controller.text = val,
+                        onSaved: (String val)=> updatesScreenController.link3Controller.text = val,
                       ),
 
                       SizedBox(height: height(32.5),),

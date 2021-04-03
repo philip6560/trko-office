@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trko_official/app/modules/ChangePasswordScreen/views/change_password_screen_view.dart';
+import 'package:get/get.dart';
+import 'package:trko_official/app/modules/ClientsScreen/controllers/clients_screen_controller.dart';
 import 'package:trko_official/app/modules/ClientsScreen/views/clients_screen_view.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/modules/ProjectScreen/views/project_screen_view.dart';
@@ -21,9 +22,13 @@ class HomeScreen extends StatelessWidget {
 
     HomeScreenController controller = Get.put(HomeScreenController(),);
 
-    controller.clientId = Get.arguments["client_id"];
     LoginScreenController loginScreenController = Get.find();
 
+    controller.clientId = loginScreenController.group_id == controller.admin ? 
+    Get.find<ClientsScreenController>().clientId : Get.arguments["client_id"]; // consider using login controller
+    
+
+    print("I came to HomeScreen");
     
     return  MediaQuery(
       data: myTextScaleFactor(home_screen_context),
@@ -33,7 +38,7 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: MyColor.dark_blue,
           leading: Visibility(
             visible: controller.client == loginScreenController.group_id ? false : true,
-            child: NavbackButton()
+            child: NavbackButton(onTap: (){   Get.back(closeOverlays: true);   },)
             ),
           leadingWidth: controller.client == loginScreenController.group_id ? 0.0 : NavbackButton.leading_width,
           title: ScreenName(screen_name: controller.client == loginScreenController.group_id ? "Home" : "Client's Projects"),
@@ -66,52 +71,60 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(top: height(31.0), left: width(10.0), right: width(10.0)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
+            child: Container(
+              padding: EdgeInsets.only(top: height(31.0), left: width(10.0), right: width(10.0)),
+              child: Obx(()=>
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
 
-                // Futurebuilder in conjuction with list view builder are to be utilized for the results.
-                // search results
-                FutureBuilder<List<Project>>(
-                    future: controller.getClientProjects(),
-                    builder: (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
+                    
+                    // check if client project list is empty
+                    controller.clientProject.isEmpty ?
 
-                      // Loading icon
-                      if (snapshot.hasError) {
-                        return refreshProjectScreen(message: "Oops! check your internet connection", label: "refresh", statusCode: null);
-                      }
+                    Loading(isFullScreen: true,) : // else
+                    
+                    // if api call returns error
+                    controller.clientProject[0].id == null && controller.clientProject[0].message != null ?
 
-                      // Load clients when data is fetched successfully
-                      if (snapshot.hasData && snapshot.data[0].id != null){
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            Project project = snapshot.data[index];
-                            return CardTemplate1(
-                              key: ValueKey(project.id),
-                              title: project.title,
-                              bottomMargin: 21.0,
-                              projectStatus: project.status,
-                              onTap: () {  Get.to(ProjectScreen(), arguments: {"description": project.description,
-                                "startDate": project.startDate, "title": project.title, "projectId": project.id,
-                              "clientId": controller.clientId, "budget": project.budget});  },
-                            );
+                    refreshProjectScreen(
+                      message: controller.clientProject[0].message,
+                      label: "refresh",
+                      onTap: (){ 
+                        controller.onReady();  
+                      },
+                      statusCode: controller.clientProject[0].statusCode,
+                      isFullScreen: true,
+                    ) 
+                    
+                    : // else client's project were gotten
+                  
+                    // display client's project
+                    ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: controller.clientProject.length,
+                      itemBuilder: (context, index) {
+                        Project project = controller.clientProject[index];
+                        return CardTemplate1(
+                          key: ValueKey(project.id),
+                          title: project.title,
+                          bottomMargin: 21.0,
+                          projectStatus: project.status,
+                          onTap: () {
+                            controller.description = project.description;
+                            controller.projectId = project.id;
+                            controller.projectName = project.title;
+                            controller.startDate = project.startDate;
+                             Get.to(ProjectScreen(),);
                           },
                         );
-                      }
-
-                      // refresh screen to re-fetch clients
-                      else{
-                        return Loading();
-                      }
-                    }
+                      },
+                    ),        
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
         ),
 
 

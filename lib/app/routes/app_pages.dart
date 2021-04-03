@@ -12,8 +12,6 @@ import '../modules/PaymentsScreen/bindings/payments_screen_binding.dart';
 import '../modules/PaymentsScreen/views/payments_screen_view.dart';
 import '../modules/UpdatesScreen/bindings/updates_screen_binding.dart';
 import '../modules/UpdatesScreen/views/updates_screen_view.dart';
-import '../modules/ClientProjectScreen/bindings/client_project_screen_binding.dart';
-import '../modules/ClientProjectScreen/views/client_project_screen_view.dart';
 import '../modules/ClientsScreen/bindings/clients_screen_binding.dart';
 import '../modules/ClientsScreen/views/clients_screen_view.dart';
 import '../modules/HomeScreen/bindings/home_screen_binding.dart';
@@ -60,11 +58,6 @@ class AppPages {
       name: Routes.CLIENTS_SCREEN,
       page: () => ClientsScreen(),
       binding: ClientsScreenBinding(),
-    ),
-    GetPage(
-      name: Routes.CLIENT_PROJECT_SCREEN,
-      page: () => ClientProjectScreen(),
-      binding: ClientProjectScreenBinding(),
     ),
     GetPage(
       name: Routes.ADD_PAYMENT_SCREEN,

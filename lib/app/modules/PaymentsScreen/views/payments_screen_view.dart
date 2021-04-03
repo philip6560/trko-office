@@ -60,7 +60,7 @@ class PaymentsScreen extends StatelessWidget {
                   controller.paymentList.isEmpty? Loading()
                       : controller.paymentList[0].paymentId != null && controller.paymentList[0].note == null
 
-                      ? refreshProjectScreen(message: controller.paymentList[0].note, label: "refresh", statusCode: null)
+                      ? refreshProjectScreen(message: controller.paymentList[0].note, label: "refresh",)
 
                       : controller.paymentList[0].paymentId == null
 

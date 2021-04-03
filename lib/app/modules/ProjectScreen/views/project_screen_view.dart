@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/modules/PaymentsScreen/views/payments_screen_view.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/views/updates_screen_view.dart';
@@ -18,26 +19,21 @@ class ProjectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext project_screen_context) {
 
-    ProjectScreenController controller = Get.put(ProjectScreenController());
+    ProjectScreenController controller = Get.put(ProjectScreenController(),);
 
-    controller.title = Get.arguments["title"];
-    controller.startDate = Get.arguments["startDate"];
-    controller.description = Get.arguments["description"];
-    controller.projectId = Get.arguments["projectId"];
-    controller.clientId = Get.arguments["clientId"];
-    controller.budget = Get.arguments["budget"];
+    HomeScreenController homeScreenController = Get.find();
 
     LoginScreenController loginScreenController = Get.find();
 
-    print("${controller.projectId}");
+    print("ProjectName ${homeScreenController.projectName} ProjectID ${homeScreenController.projectId} and CLIENTID ooo ${homeScreenController.clientId}");
 
     return MediaQuery(
       data: myTextScaleFactor(project_screen_context),
       child: Scaffold(
         appBar: AppBar(
-          leading: NavbackButton(),
+          leading: NavbackButton(onTap: (){   Get.back(closeOverlays: true);   },),
           leadingWidth: NavbackButton.leading_width,
-          title: ScreenName(screen_name: controller.title,),
+          title: ScreenName(screen_name: homeScreenController.projectName,),
           titleSpacing: NavbackButton.titlespacing,
           centerTitle: false,
           actions: [
@@ -77,14 +73,16 @@ class ProjectScreen extends StatelessWidget {
                         // date
                         Container(
                           alignment: Alignment.centerRight,
-                          child: Text(controller.convertToDate(dateTime: controller.startDate), style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_gray, fontWeight: FontWeight.bold),),
+                          child: Text(
+                            controller.convertToDate(dateTime: homeScreenController.startDate), 
+                            style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_gray, fontWeight: FontWeight.bold),),
                         ),
 
                         // details
                         Container(
                           alignment: Alignment.centerLeft,
                           margin: EdgeInsets.only(top: height(7.0)),
-                          child: Text( controller.convertDescription(description: controller.description),
+                          child: Text( controller.convertDescription(description: homeScreenController.description),
                             style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_gray,),
                           ),
                         ),
@@ -100,15 +98,16 @@ class ProjectScreen extends StatelessWidget {
                       children: [
 
                         // updates option
-                        CardTemplate2(name: 'Updates', icon: 'assets/svg/updated icon svg format.svg', onTap: (){  Get.to(UpdatesScreen(),
-                            arguments: {"projectId": controller.projectId, "projectName": controller.title, "clientId": controller.clientId});  },),
+                        CardTemplate2(
+                          key: ValueKey("Updates"),
+                          name: 'Updates', icon: 'assets/svg/updated icon svg format.svg', onTap: (){  Get.to(UpdatesScreen(),);  },),
 
                         SizedBox(width: width(41.0),),
 
                         // payments option
-                        CardTemplate2(name: 'Payments', icon: 'assets/svg/credit-card svg sample.svg', onTap: (){ Get.to(PaymentsScreen(),
-                            arguments: {"projectId": controller.projectId,
-                              "projectName": controller.title, "clientId": controller.clientId, "budget": controller.budget});  },),
+                        CardTemplate2(
+                          key: ValueKey("Payments"),
+                          name: 'Payments', icon: 'assets/svg/credit-card svg sample.svg', onTap: (){ Get.to(PaymentsScreen());  },),
 
                       ],
                     ),

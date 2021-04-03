@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:trko_official/app/models/client_payment.dart';
 import 'package:trko_official/app/models/clients_list_model.dart';
 import 'package:trko_official/app/models/project_update.dart';
@@ -227,12 +226,13 @@ class TrkoRepository{
 
       print("onCall Clients List Error: ${e.response}");
 
-      if(e.response.data["status"] == 401){
-        clients.add(Client.fromMap(e.response.data));
+      if(e.response == null){
+        clients.add(Client(message: "Oops! check your internet connection"));
         return clients;
       }
       else{
-        return null;
+        clients.add(Client.fromMap(e.response.data));
+        return clients;
       }
 
     }
@@ -264,14 +264,17 @@ class TrkoRepository{
     }
     catch (e){
 
-      print("onCall Clients List Error: ${e.response}");
+      debugPrint("onCall Clients List Error: ${e.response}");
 
-      if(e.response.data["status"] == 401){
-        projectsList.add(Project.fromMap(e.response.data));
+      if(e.response == null){
+        print("onCall Clients List DioErrorType.Default: ${e.response}");
+        projectsList.add(Project(message: "Oops! check your internet connection"));
         return projectsList;
       }
       else{
-        return null;
+        print("onCall Clients List DioErrorType.RESPONSE: ${e.response.data}");
+        projectsList.add(Project(statusCode: e.response.data["status"], message: e.response.data["message"]));
+        return projectsList;
       }
 
     }
@@ -305,12 +308,15 @@ class TrkoRepository{
 
       print("onCall Clients update List Error: ${e.response}");
 
-      if(e.response.data["status"] == 401){
-        updatesList.add(Update.fromMap(e.response.data));
+      if(e.response == null){
+        print("onCall updates List DioErrorType.Default: ${e.response}");
+        updatesList.add(Update(message: "Oops! check your internet connection"));
         return updatesList;
       }
       else{
-        return null;
+        print("onCall updates List DioErrorType.RESPONSE: ${e.response.data}");
+        updatesList.add(Update(statusCode: e.response.data["status"], message: e.response.data["message"]));
+        return updatesList;
       }
 
     }
@@ -327,20 +333,20 @@ class TrkoRepository{
     try{
 
       response = await client.delete(url, options: Options(headers: headerDetails));
-
-      return CallResponse.fromMap(response.data);
+      
+      return CallResponse(statusCode: response.data["status"], message: response.data["message"]);
 
     }
     catch (e){
 
       print("onCall Clients delete update List Error: ${e.response}");
 
-      if(e.response.data == 500){
+      if(e.response == null){
 
-        return CallResponse.fromMap(e.response.data);
+        return CallResponse(message: "Oops! check your internet connection.");
       }
       else{
-        return null;
+        return CallResponse(message: "Oops! something went wrong.");
       }
     }
   }
@@ -358,19 +364,21 @@ class TrkoRepository{
 
       response = await client.put(url, options: Options(headers: headerDetails));
 
-      return CallResponse.fromMap(response.data);
+      print("${response.data}");
+
+      return CallResponse(statusCode: response.data["status"], message: response.data["message"]);
 
     }
     catch (e){
 
-      print("onCall Clients delete update List Error: ${e.response}");
+      print("onCall Clients approve update List Error: ${e.response}");
 
-      if(e.response.data == 500){
+      if(e.response == null){
 
-        return CallResponse.fromMap(e.response.data);
+        return CallResponse(message: "Oops! check your internet connection.");
       }
       else{
-        return null;
+        return CallResponse(message: "Oops! something went wrong.");
       }
     }
   }
@@ -396,12 +404,12 @@ class TrkoRepository{
 
       print("onCall Clients delete update List Error: ${e.response}");
 
-      if(e.response.data == 500){
+      if(e.response == null){
 
-        return CallResponse.fromMap(e.response.data);
+        return CallResponse(message: "Oops! check your internet connection");
       }
       else{
-        return null;
+        return CallResponse.fromMap(e.response.data);
       }
     }
   }
@@ -426,14 +434,15 @@ class TrkoRepository{
     }
     catch (e){
 
-      print("onCall Clients delete update List Error: ${e.response}");
+      print("onCall Clients edit update Error: ${e.response}");
 
-      if(e.response.data == 500){
+      if(e.response == null){
 
-        return CallResponse.fromMap(e.response.data);
+        return CallResponse(message: "Oops! check your internet connection");
       }
       else{
-        return null;
+        
+        return CallResponse(message: "Oops! something went wrong.");
       }
     }
   }

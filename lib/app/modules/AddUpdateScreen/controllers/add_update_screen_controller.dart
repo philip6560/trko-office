@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:trko_official/app/models/project_update.dart';
-import 'package:trko_official/app/models/user_model.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
 import 'package:trko_official/app/services/api/dio_api.dart';
@@ -12,12 +11,12 @@ class AddUpdateScreenController extends GetxController {
   //TODO: Implement AddUpdateScreenController
 
 
-  final field1 = ValueKey('1');
-  final field2 = ValueKey('2');
-  final field3 = ValueKey('3');
-  final field4 = ValueKey('4');
-  var currentItem = 0.obs;
-  final formkey = GlobalKey<FormState>().obs;
+  final field1 = ValueKey('addfield1');
+  final field2 = ValueKey('addfield2');
+  final field3 = ValueKey('addfield3');
+  final field4 = ValueKey('addfield4');
+  RxInt currentItem = RxInt();
+  var formkey = GlobalKey<FormState>().obs;
   var result;
   TrkoRepository trkoRepository = TrkoRepository();
   TextEditingController descriptionController = TextEditingController();
@@ -50,10 +49,10 @@ class AddUpdateScreenController extends GetxController {
         "link2": link2Controller.text,
         "link3": link3Controller.text,
         "project": Get
-            .find<UpdatesScreenController>()
+            .find<HomeScreenController>()
             .projectId,
         "client": Get
-            .find<UpdatesScreenController>()
+            .find<HomeScreenController>()
             .clientId
       };
 
@@ -65,12 +64,15 @@ class AddUpdateScreenController extends GetxController {
 
         print("saving....");
 
-        await Get.find<UpdatesScreenController>().onReady();
-
+        currentItem.value = null;
         descriptionController.clear();
-        link2Controller.clear();
         link1Controller.clear();
+        link2Controller.clear();
         link3Controller.clear();
+
+
+        // Get.find<ProjectScreenController>().onReady();
+        Get.find<UpdatesScreenController>().getUpdates(); // test this 
 
         Get.back();
 
@@ -83,7 +85,68 @@ class AddUpdateScreenController extends GetxController {
     }
   }
 
-      @override
+  // // validate link field 1
+  // link1FieldValidator({var val}){
+
+  //   AddUpdateScreenController controller = Get.find();
+
+  //   if(val.isNotEmpty && GetUtils.isURL(val)){
+  //     return null;
+  //   }
+  //   else if(val.isEmpty){
+  //     if(controller.link2Controller.text.isNotEmpty && controller.link3Controller.text.isNotEmpty){
+  //     return "link 1 field cannot be empty";
+  //     }
+  //     else if(controller.link3Controller.text.isNotEmpty){
+  //       return "link 1 field cannot be empty";
+  //     }
+  //     else if(controller.link2Controller.text.isNotEmpty){
+  //       return "link 1 field cannot be empty";
+  //     }
+  //   }
+  //   else{
+  //     return "please enter a valid url";
+  //   }
+
+  // }
+
+
+  // // validate link field 2
+  // link2FieldValidator({AddUpdateScreenController controller, String val}){
+
+  //   if(val.isNotEmpty && GetUtils.isURL(val)){
+  //     return null;
+  //   }
+  //   else if(val.isEmpty){
+  //     if(controller.link1Controller.text.isNotEmpty && link3Controller.text.isNotEmpty){
+  //     return "link 2 field cannot be empty";
+  //     }
+  //     else if(controller.link3Controller.text.isNotEmpty){
+  //       return "link 2 field cannot be empty";
+  //     }
+  //   }
+  //   else{
+  //     return "please enter a valid url";
+  //   }
+  // }
+
+
+  // // validate link field 3
+  // link3FieldValidator({AddUpdateScreenController controller, String val}){
+
+  //   if(val.isNotEmpty & GetUtils.isURL(val)){
+  //     return null;
+  //   }
+  //   else if(val.isEmpty){
+  //     return null;
+  //   }
+  //   else{
+  //     return "please enter a valid url";
+  //   }
+  // }
+
+
+  @override
   void onInit() {
     super.onInit();
   }

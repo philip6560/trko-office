@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:trko_official/app/models/user_model.dart';
 import 'package:trko_official/app/modules/ChangePasswordScreen/views/change_password_screen_view.dart';
 import 'package:trko_official/app/modules/ClientsScreen/views/clients_screen_view.dart';
-import 'package:trko_official/app/modules/HomeScreen/views/home_screen_view.dart';
 import 'package:trko_official/app/services/api/dio_api.dart';
 import 'package:trko_official/app/widgets/loading_widget.dart';
 import 'package:trko_official/app/widgets/snackbar.dart';
@@ -11,8 +10,8 @@ import 'package:trko_official/app/widgets/snackbar.dart';
 class LoginScreenController extends GetxController {
 
   
-  final field1 = ValueKey('field1');
-  final field2 = ValueKey('field2');
+  final field1 = ValueKey('loginField1');
+  final field2 = ValueKey('loginField2');
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
   RxString email;

@@ -13,11 +13,13 @@ class HomeScreenController extends GetxController {
   RxBool is_button_visible = true.obs;
   int client = 2;
   int admin = 1;
-  int clientId;
   TrkoRepository trkoRepository = TrkoRepository();
   List<Project> result;
   String projectCompeleted = "1";
   String projectNotCompeleted = "0";
+  var clientProject = List<Project>().obs;
+  String description, startDate, budget, projectName;
+  int projectId, clientId;
 
 
 
@@ -25,7 +27,9 @@ class HomeScreenController extends GetxController {
 
       result = await trkoRepository.clientProject(token: Get.find<LoginScreenController>().token, clientId: clientId);
 
-      return result;
+      clientProject.assignAll(result);
+
+      return clientProject;
 
 
     }
@@ -52,6 +56,7 @@ class HomeScreenController extends GetxController {
 
   @override
   void onReady() {
+    getClientProjects();
     scrollController.value.addListener(()=> hideButton);
     super.onReady();
   }

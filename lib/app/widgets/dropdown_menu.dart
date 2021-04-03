@@ -36,7 +36,7 @@ class MileStonesList extends StatelessWidget {
           items: List.generate(controller.milestoneList.length, (index) => DropdownMenuItem(
             value: index,
             // clean string before displaying
-            child: Text("${controller.cleanMilestone(controller.milestoneList[index].values)}",
+            child: Text("${cleanMilestone(controller.milestoneList[index].values)}",
               style: GoogleFonts.poppins(fontSize: height(18.0)),
             ),
           )),

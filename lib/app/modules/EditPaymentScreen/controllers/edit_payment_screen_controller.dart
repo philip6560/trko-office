@@ -6,9 +6,9 @@ class EditPaymentScreenController extends GetxController {
   //TODO: Implement EditPaymentScreenController
 
   final ratio1 = 1;
-  final field1 = ValueKey('field1');
-  final field2 = ValueKey('field2');
-  final field3 = ValueKey('field3');
+  final field1 = ValueKey('editPaymentField1');
+  final field2 = ValueKey('editPaymentField2');
+  final field3 = ValueKey('editPaymentField3');
   
   @override
   void onInit() {
