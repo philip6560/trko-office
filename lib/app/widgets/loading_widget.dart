@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:trko_official/app/modules/ChangePasswordScreen/views/change_password_screen_view.dart';
+import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import '../utils/responsive.dart';
 import '../utils/helper.dart';
 
@@ -57,7 +58,8 @@ changePassword({BuildContext context}){
         GestureDetector(
           onTap: (){
             Get.back();
-            Get.to(ChangePasswordScreen(), arguments: {"navback": true});
+            Get.find<LoginScreenController>().navback = true;
+            Get.to(ChangePasswordScreen(),);
           },
           child: Card(
             shape: RoundedRectangleBorder(

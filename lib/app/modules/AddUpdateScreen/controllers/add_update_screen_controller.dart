@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:trko_official/app/models/user_model.dart';
 import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
@@ -17,7 +18,7 @@ class AddUpdateScreenController extends GetxController {
   final field4 = ValueKey('addfield4');
   RxInt currentItem = RxInt();
   var formkey = GlobalKey<FormState>().obs;
-  var result;
+  CallResponse result;
   TrkoRepository trkoRepository = TrkoRepository();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController link1Controller = TextEditingController();
@@ -60,7 +61,7 @@ class AddUpdateScreenController extends GetxController {
 
       print("$result");
 
-      if(result["status"] == 201){
+      if(result.statusCode == 201){
 
         print("saving....");
 
@@ -76,10 +77,15 @@ class AddUpdateScreenController extends GetxController {
 
         Get.back();
 
-        snackbarResponse("Milestone has been successfuly added");
+        snackbarResponse(result.message);
       }
       else{
-        return result;
+
+        Get.back();
+
+        String statusCode = result.statusCode == null ? "" : ": ${result.statusCode}";
+
+        snackbarResponse("${result.message}$statusCode");
       }
 
     }

@@ -23,7 +23,7 @@ class EditUpdateScreen extends StatelessWidget {
 
     controller.getMilestoneId(updatesScreenController.milestone);
 
-    print("this is the link1controller ${controller.currentItem.value}");
+    print("I came to edit update screen");
 
     return MediaQuery(
       data: myTextScaleFactor(edit_update_screen_context),
@@ -39,7 +39,7 @@ class EditUpdateScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Center(
             child: Container(
-              padding: EdgeInsets.only(top: height(20.0), left: width(10.0), right: width(10.0), bottom: height(40.0)),
+              padding: EdgeInsets.only(top: height(20.0), left: width(10.0), right: width(10.0), bottom: height(60.0)),
 
               child: Obx(()=>
                 Form(

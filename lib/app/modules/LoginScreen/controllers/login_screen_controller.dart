@@ -22,6 +22,7 @@ class LoginScreenController extends GetxController {
   int group_id;
   String token;
   int clientId;
+  bool navback;
   var formKey = GlobalKey<FormState>().obs;
 
   validate() async{
@@ -37,15 +38,16 @@ class LoginScreenController extends GetxController {
       // token and group_id will be passed to customize view
       if (client_result.statusCode == null && client_result.group_id == 2){
 
-        print("Client going to home screen $client_result");
+        print("Client going to home screen ${client_result.client_id}");
 
         group_id = client_result.group_id;
         token = client_result.token;
         clientId = client_result.client_id;
         emailcontroller.clear();
         passwordcontroller.clear();
+        navback = false;
 
-        Get.offAll(ChangePasswordScreen(), arguments: {"navback": false});
+        Get.offAll(ChangePasswordScreen());
       }
 
       // invalid password

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:trko_official/app/models/user_model.dart';
 import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
@@ -15,12 +16,13 @@ class EditUpdateScreenController extends GetxController {
   final field3 = ValueKey('editfield3');
   final field4 = ValueKey('editfield4');
   var currentItem = RxInt();
-  var result;
+  CallResponse result;
   final formkey = GlobalKey<FormState>().obs;
   TrkoRepository trkoRepository = TrkoRepository();
 
   UpdatesScreenController updatesScreenController = Get.find();
 
+  // map milestone to be edited to its corresponding index from the milestone list 
   getMilestoneId(var value){
 
     print("value was gotten: $value");
@@ -35,6 +37,7 @@ class EditUpdateScreenController extends GetxController {
     }
   }
 
+  // updates the drop down menu with every new milestone selected
   selectedItem(value){
 
     updatesScreenController.milestone = Get.find<UpdatesScreenController>().milestoneList[value].keys;
@@ -70,18 +73,24 @@ class EditUpdateScreenController extends GetxController {
 
       print("$result");
 
-      if(result["status"] == 200){
+      if(result.statusCode == 200){
 
         print("saving....");
 
         await Get.find<UpdatesScreenController>().getUpdates();// check out
 
-        Get.back();
+        Get.back(); Get.back();
 
         snackbarResponse("changes were successfully made.");
+
       }
       else{
-        return result;
+
+        Get.back();
+
+        String statusCode = result.statusCode == null ? "" : ": ${result.statusCode}";
+
+        snackbarResponse("${result.message}$statusCode");
       }
 
     }

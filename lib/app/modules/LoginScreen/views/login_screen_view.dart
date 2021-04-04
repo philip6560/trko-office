@@ -15,6 +15,8 @@ class LoginScreen extends StatelessWidget {
 
     LoginScreenController controller = Get.put(LoginScreenController(), permanent: true);
 
+    print("i came to loginscreen");
+
     return MediaQuery(
       data: myTextScaleFactor(login_screen_context),
       child: Scaffold(

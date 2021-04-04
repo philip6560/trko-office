@@ -21,7 +21,7 @@ class CallResponse{
   CallResponse({this.statusCode, this.message, this.token, this.group_id, this.client_id});
 
   CallResponse.fromMap(Map<String, dynamic> map){
-    statusCode = map["statusCode"];
+    statusCode = map["statusCode"] ?? map["status"];
     message = map["message"];
     token = map["token"];
     group_id = map["group_id"];

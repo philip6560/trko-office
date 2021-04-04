@@ -11,26 +11,24 @@ import 'package:trko_official/app/widgets/text_fields.dart';
 import '../controllers/change_password_screen_controller.dart';
 
 class ChangePasswordScreen extends  StatelessWidget {
-  @override
-  Widget build(BuildContext change_password_screen_context) {
 
     ChangePasswordScreenController controller = Get.put(ChangePasswordScreenController());
 
-    // controller.group_id = Get.arguments["group_id"];
-    // controller.token = Get.arguments["token"];
-
     LoginScreenController loginScreenController = Get.find();
 
-    controller.navBackButton = Get.arguments["navback"];
+  @override
+  Widget build(BuildContext change_password_screen_context) {
 
+    controller.navBackButton = loginScreenController.navback;
 
-    // print("token: ${controller.token}");
+    print("I came to changePassword screen 2");
 
 
     return MediaQuery(
       data: myTextScaleFactor(change_password_screen_context),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           leading: Visibility(
             visible: controller.navBackButton,
             child: NavbackButton()
@@ -44,61 +42,101 @@ class ChangePasswordScreen extends  StatelessWidget {
           child: Center(
             child: Container(
               padding: EdgeInsets.only(top: height(25.0), left: width(10.0), right: width(10.0),),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                  SizedBox(height: height(32.0),),
+                    SizedBox(height: height(32.0),),
 
-                  // amount field label
-                  FieldLabel(
-                    labelname: 'Old Password',
-                  ),
+                    // old password field label
+                    FieldLabel(
+                      labelname: 'Old Password',
+                    ),
 
-                  SizedBox(height: height(13.0),),
+                    SizedBox(height: height(13.0),),
 
-                  // amount field
-                  MyFormField(
-                    key: controller.field1,
-                  ),
+                    // old password field
+                    MyFormField(
+                      key: controller.field1,
+                      textEditingController: controller.oldPasswordController,
+                      textInputAction: TextInputAction.next,
+                      validator: (String val)=> val.isEmpty ? "please enter your old password" : null,
+                      onSaved: (String val)=> controller.oldPasswordController.text = val,
+                    ),
 
-                  SizedBox(height: height(26.0),),
+                    SizedBox(height: height(26.0),),
 
-                  // date field label
-                  FieldLabel(
-                    labelname: 'New Password',
-                  ),
+                    // new password field label
+                    FieldLabel(
+                      labelname: 'New Password',
+                    ),
 
-                  SizedBox(height: height(12.0),),
+                    SizedBox(height: height(12.0),),
 
-                  // date field
-                  MyFormField(
-                    key: controller.field2,
-                  ),
+                    // new password field
+                    MyFormField(
+                      key: controller.field2,
+                      textEditingController: controller.newPasswordController,
+                      textInputAction: TextInputAction.next,
+                      validator: (String val){
+                        if(val.isNotEmpty){
+                          if(controller.oldPasswordController.text == controller.newPasswordController.text){
+                            return "please enter a new password";
+                          }
+                          else{
+                            return null;
+                          }
+                        }
+                        else{
+                          return "please enter your new password";
+                        }
+                      },
+                      onSaved: (String val)=> controller.newPasswordController.text = val,
+                    ),
 
-                  SizedBox(height: height(26.0),),
+                    SizedBox(height: height(26.0),),
 
-                  // note field label
-                  FieldLabel(
-                    labelname: 'Retype Password',
-                  ),
+                    // confirm password field label
+                    FieldLabel(
+                      labelname: 'Retype Password',
+                    ),
 
-                  SizedBox(height: height(12.0),),
+                    SizedBox(height: height(12.0),),
 
-                  // note field
-                  MyFormField(
-                    key: controller.field3,
-                  ),
+                    // confirm password field
+                    MyFormField(
+                      key: controller.field3,
+                      textEditingController: controller.confirmPasswordController,
+                      textInputAction: TextInputAction.done,
+                      validator: (String val){
 
-                  SizedBox(height: height(46.0),),
+                        if(val.isNotEmpty){
+                          if(controller.confirmPasswordController.text == controller.newPasswordController.text){
+                            return null;
+                          }
+                          else{
+                            return "passwords do not match";
+                          }
+                        }
+                        else{
+                          return "please confirm your new password";
+                        }
+                      },
+                      onSaved: (String val)=> controller.confirmPasswordController.text = val,
+                    ),
 
-                  // save button
-                  Center(
-                    child: PrimaryButton(
-                      label: "Save", margin: EdgeInsets.only(left: width(54.0), right: width(40.0),), onPressed: (){ controller.changePassword();  },
-                    )
-                  ),
-                ],     
+                    SizedBox(height: height(46.0),),
+
+                    // save button
+                    Center(
+                      child: PrimaryButton(
+                        label: "Save", margin: EdgeInsets.only(left: width(54.0), right: width(40.0),), onPressed: (){ controller.changePassword();  },
+                      )
+                    ),
+                  ],     
+                ),
               ),
             ),
           ),

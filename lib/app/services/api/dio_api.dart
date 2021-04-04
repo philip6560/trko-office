@@ -192,9 +192,34 @@ class TrkoRepository{
         return CallResponse(group_id: null, statusCode: null, message: "Could not login, please check your internet connection", token: null);
       }
     }
-    
-      // Map error = {"error": "Unable to login, Please check login credentials"};
 
+  }
+
+  Future<CallResponse> changePassword({String token, Map<String, dynamic> passwordData}) async{
+
+    Map<String, String> headerDetails = {"Authorization" : "Bearer $token"};
+
+    String url = baseUrl + "/users/changepass";
+
+    try{
+
+      response = await client.post(url, data: passwordData, options: Options(headers: headerDetails));
+
+      return CallResponse.fromMap(response.data);
+    }
+    catch (e){
+
+      if(e.response == null){
+
+        return CallResponse(message: "Oops! check your internet connection.");
+
+      }
+      else{
+
+        return CallResponse.fromMap(e.response.data);
+      }
+
+    }
 
   }
 
@@ -334,7 +359,7 @@ class TrkoRepository{
 
       response = await client.delete(url, options: Options(headers: headerDetails));
       
-      return CallResponse(statusCode: response.data["status"], message: response.data["message"]);
+      return CallResponse.fromMap(response.data);
 
     }
     catch (e){
@@ -366,7 +391,7 @@ class TrkoRepository{
 
       print("${response.data}");
 
-      return CallResponse(statusCode: response.data["status"], message: response.data["message"]);
+      return CallResponse.fromMap(response.data);
 
     }
     catch (e){
@@ -397,7 +422,7 @@ class TrkoRepository{
 
       print("added $response");
 
-      return response.data;
+      return CallResponse(statusCode: response.data["status"], message: "Update has been successfuly added");
 
     }
     catch (e){
@@ -429,7 +454,7 @@ class TrkoRepository{
 
       print("added $response");
 
-      return response.data;
+      return CallResponse(statusCode: response.data["status"], message: "Update has been successfuly modified");
 
     }
     catch (e){

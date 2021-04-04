@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get.dart';
 import 'package:trko_official/app/modules/ClientsScreen/controllers/clients_screen_controller.dart';
 import 'package:trko_official/app/modules/ClientsScreen/views/clients_screen_view.dart';
 import 'package:trko_official/app/modules/LoginScreen/controllers/login_screen_controller.dart';
@@ -24,8 +23,9 @@ class HomeScreen extends StatelessWidget {
 
     LoginScreenController loginScreenController = Get.find();
 
-    controller.clientId = loginScreenController.group_id == controller.admin ? 
-    Get.find<ClientsScreenController>().clientId : Get.arguments["client_id"]; // consider using login controller
+    // consider using login controller, profer a better solution hereto pass clientId
+    controller.clientId = loginScreenController.group_id == controller.client ?
+    loginScreenController.clientId : Get.find<ClientsScreenController>().clientId;
     
 
     print("I came to HomeScreen");
@@ -35,10 +35,11 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: MyColor.dark_blue,
           leading: Visibility(
             visible: controller.client == loginScreenController.group_id ? false : true,
-            child: NavbackButton(onTap: (){   Get.back(closeOverlays: true);   },)
+            child: NavbackButton(),
             ),
           leadingWidth: controller.client == loginScreenController.group_id ? 0.0 : NavbackButton.leading_width,
           title: ScreenName(screen_name: controller.client == loginScreenController.group_id ? "Home" : "Client's Projects"),
