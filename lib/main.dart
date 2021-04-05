@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import './app/routes/app_pages.dart';
 import './app/utils/helper.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
@@ -17,6 +18,7 @@ void main() {
         scaffoldBackgroundColor: MyColor.light_grayish_red,
         appBarTheme: AppBarTheme(
           elevation: 0,
+
         ),
       ),
       debugShowCheckedModeBanner: false,

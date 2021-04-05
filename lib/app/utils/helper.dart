@@ -57,6 +57,20 @@ class Launch{
 
   }
 
+  static updateLink(String url)async{
+
+    if(await canLaunch(url)){
+
+      await launch(url);
+    }
+    else{
+      return errorResponse;
+    }
+
+  }
+
+  
+
 }
 
 // convert date and time string to the appropriate format

@@ -334,8 +334,10 @@ class CardTemplate4 extends StatelessWidget {
             SizedBox(height: height(30.0),),
 
             // bottom section
-              Visibility(
-                visible: this.link1 != ""? true : false,
+            Visibility(
+              visible: this.link1 != ""? true : false,
+              child: GestureDetector(
+                onTap: ()=> Launch.updateLink(this.link1),
                 child: Container(
                   margin: EdgeInsets.only(bottom: link2 == "" && link3 == ""? height(0.0) : height(2.0)),
                   alignment: Alignment.bottomLeft,
@@ -345,25 +347,33 @@ class CardTemplate4 extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+
             Visibility(
                 visible: this.link2 != ""? true : false,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: link3 == ""? height(0.0) : height(2.0)),
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    this.link2,
-                    style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_cyan),
+                child: GestureDetector(
+                  onTap: ()=> Launch.updateLink(this.link2),
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: link3 == ""? height(0.0) : height(2.0)),
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      this.link2,
+                      style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_cyan),
+                    ),
                   ),
                 ),
               ),
 
             Visibility(
                 visible: this.link3 != ""? true : false,
-                child: Container(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    this.link3,
-                    style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_cyan),
+                child: GestureDetector(
+                  onTap: ()=> Launch.updateLink(this.link3),
+                  child: Container(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      this.link3,
+                      style: GoogleFonts.poppins(fontSize: height(17.0), color: MyColor.dark_cyan),
+                    ),
                   ),
                 ),
               ),
