@@ -4,7 +4,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trko_official/app/models/user_model.dart';
 import 'package:trko_official/app/modules/EditPaymentScreen/views/edit_payment_screen_view.dart';
+import 'package:trko_official/app/modules/HomeScreen/controllers/home_screen_controller.dart';
 import 'package:trko_official/app/modules/UpdatesScreen/controllers/updates_screen_controller.dart';
 import '../utils/helper.dart';
 import '../modules/EditUpdateScreen/views/edit_update_screen_view.dart';
@@ -155,6 +157,8 @@ class SlidableCardTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
 
     PaymentsScreenController controller = Get.find();
+
+    HomeScreenController homeScreenController = Get.find();
 
     print('Main : ${Get.find<PaymentsScreenController>().slidableController.activeState}');
 

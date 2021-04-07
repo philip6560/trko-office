@@ -20,120 +20,117 @@ class ChangePasswordScreen extends  StatelessWidget {
     print("I came to changePassword screen 2");
 
 
-    return MediaQuery(
-      data: myTextScaleFactor(change_password_screen_context),
-      child: Obx(()=>
-        Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            leading: Visibility(
-              visible: controller.navBackButton.value == "true" ? true : false,
-              child: NavbackButton()
-              ),
-            leadingWidth: controller.navBackButton.value == "false" ? 0.0 : NavbackButton.leading_width,
-            title: ScreenName(screen_name: "Change Password"),
-            titleSpacing: controller.navBackButton.value == "false" ? width(10.0) : NavbackButton.titlespacing,
-            centerTitle: false,
-          ),
-          body: SingleChildScrollView(
-            child: Center(
-              child: Container(
-                padding: EdgeInsets.only(top: height(25.0), left: width(10.0), right: width(10.0),),
-                child: Form(
-                  key: controller.formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+    return Obx(()=>
+      Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: Visibility(
+            visible: controller.navBackButton.value == "true" ? true : false,
+            child: NavbackButton()
+            ),
+          leadingWidth: controller.navBackButton.value == "false" ? 0.0 : NavbackButton.leading_width,
+          title: ScreenName(screen_name: "Change Password"),
+          titleSpacing: controller.navBackButton.value == "false" ? width(10.0) : NavbackButton.titlespacing,
+          centerTitle: false,
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.only(top: height(25.0), left: width(10.0), right: width(10.0),),
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                      SizedBox(height: height(32.0),),
+                    SizedBox(height: height(32.0),),
 
-                      // old password field label
-                      FieldLabel(
-                        labelname: 'Old Password',
-                      ),
+                    // old password field label
+                    FieldLabel(
+                      labelname: 'Old Password',
+                    ),
 
-                      SizedBox(height: height(13.0),),
+                    SizedBox(height: height(13.0),),
 
-                      // old password field
-                      MyFormField(
-                        key: controller.field1,
-                        textEditingController: controller.oldPasswordController,
-                        textInputAction: TextInputAction.next,
-                        validator: (String val)=> val.isEmpty ? "please enter your old password" : null,
-                        onSaved: (String val)=> controller.oldPasswordController.text = val,
-                      ),
+                    // old password field
+                    MyFormField(
+                      key: controller.field1,
+                      textEditingController: controller.oldPasswordController,
+                      textInputAction: TextInputAction.next,
+                      validator: (String val)=> val.isEmpty ? "please enter your old password" : null,
+                      onSaved: (String val)=> controller.oldPasswordController.text = val,
+                    ),
 
-                      SizedBox(height: height(26.0),),
+                    SizedBox(height: height(26.0),),
 
-                      // new password field label
-                      FieldLabel(
-                        labelname: 'New Password',
-                      ),
+                    // new password field label
+                    FieldLabel(
+                      labelname: 'New Password',
+                    ),
 
-                      SizedBox(height: height(12.0),),
+                    SizedBox(height: height(12.0),),
 
-                      // new password field
-                      MyFormField(
-                        key: controller.field2,
-                        textEditingController: controller.newPasswordController,
-                        textInputAction: TextInputAction.next,
-                        validator: (String val){
-                          if(val.isNotEmpty){
-                            if(controller.oldPasswordController.text == controller.newPasswordController.text){
-                              return "please enter a new password";
-                            }
-                            else{
-                              return null;
-                            }
+                    // new password field
+                    MyFormField(
+                      key: controller.field2,
+                      textEditingController: controller.newPasswordController,
+                      textInputAction: TextInputAction.next,
+                      validator: (String val){
+                        if(val.isNotEmpty){
+                          if(controller.oldPasswordController.text == controller.newPasswordController.text){
+                            return "please enter a new password";
                           }
                           else{
-                            return "please enter your new password";
+                            return null;
                           }
-                        },
-                        onSaved: (String val)=> controller.newPasswordController.text = val,
-                      ),
+                        }
+                        else{
+                          return "please enter your new password";
+                        }
+                      },
+                      onSaved: (String val)=> controller.newPasswordController.text = val,
+                    ),
 
-                      SizedBox(height: height(26.0),),
+                    SizedBox(height: height(26.0),),
 
-                      // confirm password field label
-                      FieldLabel(
-                        labelname: 'Retype Password',
-                      ),
+                    // confirm password field label
+                    FieldLabel(
+                      labelname: 'Retype Password',
+                    ),
 
-                      SizedBox(height: height(12.0),),
+                    SizedBox(height: height(12.0),),
 
-                      // confirm password field
-                      MyFormField(
-                        key: controller.field3,
-                        textEditingController: controller.confirmPasswordController,
-                        textInputAction: TextInputAction.done,
-                        validator: (String val){
+                    // confirm password field
+                    MyFormField(
+                      key: controller.field3,
+                      textEditingController: controller.confirmPasswordController,
+                      textInputAction: TextInputAction.done,
+                      validator: (String val){
 
-                          if(val.isNotEmpty){
-                            if(controller.confirmPasswordController.text == controller.newPasswordController.text){
-                              return null;
-                            }
-                            else{
-                              return "passwords do not match";
-                            }
+                        if(val.isNotEmpty){
+                          if(controller.confirmPasswordController.text == controller.newPasswordController.text){
+                            return null;
                           }
                           else{
-                            return "please confirm your new password";
+                            return "passwords do not match";
                           }
-                        },
-                        onSaved: (String val)=> controller.confirmPasswordController.text = val,
-                      ),
+                        }
+                        else{
+                          return "please confirm your new password";
+                        }
+                      },
+                      onSaved: (String val)=> controller.confirmPasswordController.text = val,
+                    ),
 
-                      SizedBox(height: height(46.0),),
+                    SizedBox(height: height(46.0),),
 
-                      // save button
-                      Center(
-                        child: PrimaryButton(
-                          label: "Save", margin: EdgeInsets.only(left: width(54.0), right: width(40.0),), onPressed: (){ controller.changePassword();  },
-                        )
-                      ),
-                    ],
-                  ),
+                    // save button
+                    Center(
+                      child: PrimaryButton(
+                        label: "Save", margin: EdgeInsets.only(left: width(54.0), right: width(40.0),), onPressed: (){ controller.changePassword();  },
+                      )
+                    ),
+                  ],
                 ),
               ),
             ),

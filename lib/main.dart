@@ -1,6 +1,7 @@
  import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:trko_official/app/modules/SplashScreen/views/splash_screen_view.dart';
 
 import './app/routes/app_pages.dart';
 import './app/utils/helper.dart';
@@ -24,7 +25,7 @@ void main() {
         final MediaQueryData data = MediaQuery.of(context);
         return MediaQuery(
             data: data.copyWith(textScaleFactor: data.textScaleFactor.clamp(0.85, 1.0)),
-            child: null
+            child: child,
         );
       },
       debugShowCheckedModeBanner: false,
